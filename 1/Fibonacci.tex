@@ -45,57 +45,13 @@
 
 下面是 C++ 代码，其中最繁琐的部分是实现矩阵乘法：
 
-\begin{lstlisting}
-#include <iostream>
-#include <cmath>
+\begin{mdframed}[backgroundcolor=bkgblack]
+\lstinputlisting[lastline=17]{./Fibonacci.cpp}
+\end{mdframed}
 
-using namespace std;
-
-struct mat {
-    unsigned long long a[4];
-    mat operator *(mat o) {
-        mat t;
-        t.a[0] = (this->a[0] * o.a[0] + this->a[1] * o.a[2]) % 1000000007;
-        t.a[1] = (this->a[0] * o.a[1] + this->a[1] * o.a[3]) % 1000000007;
-        t.a[2] = (this->a[2] * o.a[0] + this->a[3] * o.a[2]) % 1000000007;
-        t.a[3] = (this->a[2] * o.a[1] + this->a[3] * o.a[3]) % 1000000007;
-        return t;
-    }
-};
-
-// 预处理的矩阵 2^k 次幂
-mat mat_pow[64];
-
-int fib(unsigned long long k){
-    // 临时矩阵，每次在此上面乘以 mat_pow 中的某项
-    mat tmp;
-    tmp.a[0] = 1;
-    tmp.a[1] = 0;
-    tmp.a[2] = 0;
-    tmp.a[3] = 1;
-    for (int i = 0; i < 64; i++) {
-        // 如果 a_i 为 1
-        if (k & (1ull << i)) {
-            tmp = tmp * mat_pow[i];
-        }
-    }
-    return tmp.a[1];
-}
-
-int main(){
-    mat_pow[0].a[0] = 0;
-    mat_pow[0].a[1] = 1;
-    mat_pow[0].a[2] = 1;
-    mat_pow[0].a[3] = 1;
-    for (int i = 1; i < 64; i++) {
-        mat_pow[i] = mat_pow[i-1] * mat_pow[i-1];
-    }
-    unsigned long long n;
-    cin >> n;
-    cout << fib(n) << endl;
-    return 0;
-}    
-\end{lstlisting}
+\begin{mdframed}[backgroundcolor=bkgblack]
+\lstinputlisting[firstline=18]{./Fibonacci.cpp}
+\end{mdframed}
 
 补充一下矩阵的乘法公式：
 \[\begin{pmatrix}a_0&a_1\\a_2&a_3\end{pmatrix}\times\begin{pmatrix}b_0&b_1\\b_2&b_3\end{pmatrix}=\begin{pmatrix}a_0b_0+a_1b_2&a_0b_1+a_1b_3\\a_2b_0+a_3b_2&a_2b_1+a_3b_3\end{pmatrix}\]
