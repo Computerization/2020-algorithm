@@ -1,0 +1,34 @@
+\documentclass[UTF8,12pt]{ctexart}
+\usepackage{../Writeup}
+\title{Livestock Lineup}
+\author{Josh-Cena}
+\date{2020年12月2日}
+\begin{document}
+\maketitle
+\begin{mdframed}[style=Question]
+    Every day, Farmer John milks his 8 dairy cows, named Bessie, Buttercup, Belinda, Beatrice, Bella, Blue, Betsy, and Sue.
+
+    The cows are rather picky, unfortunately, and require that Farmer John milks them in an order that respects $N$ constraints. Each constraint is of the form ``$X$ must be milked beside $Y$'', stipulating that cow $X$ must appear in the milking order either directly after cow $Y$ or directly before cow $Y$.
+
+    Please help Farmer John determine an ordering of his cows that satisfies all of these required constraints. It is guaranteed that an ordering is always possible. If several orderings work, then please output the one that is alphabetically first. That is, the first cow should have the alphabetically lowest name of all possible cows that could appear first in any valid ordering. Among all orderings starting with this same alphabetically-first cow, the second cow should be alphabetically lowest among all possible valid orderings, and so on.
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|c|c|}\hline
+            数据规模&内存限制&运行时间\\\hline
+            $1\le N\le 7$&\SI{256}{MB}&\SI{2.0}{s}\\\hline
+        \end{tabular}
+    \end{table}
+\end{mdframed}
+\textit{题解.} 这道题在理解了题目的需求——生成一个符合给定约束的字典序最小的排列后，应该难度不高。我们可以按字典序生成全部的排列（一共有$8!=40320$种），然后输出第一个满足所有约束条件的。如果不会用回溯算法生成全排列，可能需要借助\texttt{algorithm}中的\texttt{next\_permutation}函数。这也是典型的铜组思路：因为规模极小，可以暴力枚举之后\textit{挑选}解而不是\textit{构造}解。
+
+暴力法的代码：
+
+\lstinputlisting{./lineup_brute.cpp}
+
+当然，这种方法对于有一些竞赛经验的参赛者来说反倒不容易想到。这些参赛者会试图通过约束条件来构造解。这需要一点点贪心的思想：为了让排列字典序最小，就一定要让每一位上的奶牛字典序尽可能小。我们可以把一个排列看作一个“约束链”，其中每一头奶牛都因为它相邻位置奶牛的约束而只有唯一的可能。每完成一条约束链的连接后，都可以从剩下未被安排进队的奶牛中挑选编号最小的，但不能是有两个未满足的约束的（因为一个“约束链”中头和尾的奶牛都只能和它相邻的一头奶牛间有约束），然后在确定了链头之后，就可以非常自然地得到整个链条。重复同样的构造过程，直到所有奶牛都被添加入队列。
+
+构造法的代码：
+
+\lstinputlisting{./lineup.cpp}
+\end{document}
